@@ -24,6 +24,10 @@ let apis = {
 	try {
 		const serverPort = await server(apis);
 		const browser = await startBrowser(serverPort);
+		process.on('SIGINT', (d) => {
+			browser.kill();
+			process.exit(2);
+		});
 	} catch(e){
 		console.error(e);
 	}
