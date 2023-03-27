@@ -61,7 +61,7 @@
 		}, false);
 
 		document.querySelector('#restapi').addEventListener('click', async function() {
-			document.querySelector('#restresp').innerHTML = await curl(`${window.location.href}api/restapi`);
+			document.querySelector('#restresp').innerHTML = await curl(`${window.location.href}api/apipath`);
 		});
 
 		let websocket = null;
