@@ -1,0 +1,100 @@
+<html>
+  <head>
+		<title>wui-app</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+			body {
+				border: 2px solid #ccc;
+			}
+
+			.vertical-align {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				height: 50px;
+		}
+    </style>
+  </head>
+  <body>
+		<span class="vertical-align">
+			<button id="restapi">Call REST API</button>&nbsp&nbsp
+			<textarea id="restresp" rows="1" cols="25">REST API response</textarea>
+		</span>
+		</br>
+		<span class="vertical-align">
+			<button id="openws">Open websocket</button>&nbsp&nbsp
+			<button id="sendws" hidden>Send on websocket</button>&nbsp&nbsp
+			<button id="closews" hidden>Close websocket</button>
+		</span>
+		</br>
+		<div id="wsdata" hidden>
+			<span class="vertical-align">
+				<p>Random websocket data from backend</p>&nbsp&nbsp
+				<textarea id="wsresp" rows="1" cols="8"></textarea>
+			</span>
+		</div>
+  </body>
+	<script type="module">
+		function curl(cmd, method='GET', headers={}, body='') {
+			return new Promise((resolve, reject) => {
+				const http = new XMLHttpRequest();
+				http.open(method, cmd);
+				http.send();
+				http.onreadystatechange = function() {
+					if(this.readyState === 4) {
+						if(this.status === 200) {
+							resolve(http.responseText);
+						} else {
+							reject(new Error('Failed to load page, status code: ' + this.status));
+						}
+					}
+				};
+			});
+		};
+
+		window.resizeTo(
+			window.screen.availWidth * .75,
+    	window.screen.availHeight * .75);
+
+		window.addEventListener("beforeunload", async function(e){
+			navigator.sendBeacon(`${window.location.href}ctrl/pageclose`);
+		}, false);
+
+		document.querySelector('#restapi').addEventListener('click', async function() {
+			document.querySelector('#restresp').innerHTML = await curl(`${window.location.href}api/restapi`);
+		});
+
+		let websocket = null;
+
+		document.querySelector('#openws').addEventListener('click', async function() {
+			websocket = new WebSocket(`ws://${window.location.host}`);
+			document.querySelector('#openws').hidden = true;
+			document.querySelector('#sendws').hidden = false;
+			document.querySelector('#closews').hidden = false;
+			document.querySelector('#wsdata').hidden = false;
+
+			websocket.onmessage = msg => {
+				document.querySelector('#wsresp').innerHTML = msg.data;
+			}
+		});
+		
+		document.querySelector('#sendws').addEventListener('click', async function() {
+			websocket.send(JSON.stringify({
+				action: 'send',
+				to: 'server',
+				data: 'message from client'
+			}));
+			document.querySelector('#sendws').hidden = true;
+		});
+
+		document.querySelector('#closews').addEventListener('click', async function() {
+			websocket.close();
+			document.querySelector('#openws').hidden = false;
+			document.querySelector('#sendws').hidden = true;
+			document.querySelector('#closews').hidden = true;
+			document.querySelector('#wsdata').hidden = true;
+			document.querySelector('#wsresp').innerHTML = '';
+
+		});
+	</script>
+</html>

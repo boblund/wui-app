@@ -1,0 +1,45 @@
+/* taken from gluon-framework */
+
+.titlebar-spacer, #firefox-view-button, #alltabs-button, #tabbrowser-arrowscrollbox-periphery, .tab-close-button {
+  display: none;
+}
+
+#nav-bar, #urlbar-container, #searchbar { visibility: collapse !important; }
+
+.tab-background, .tab-content, #tabbrowser-tabs {
+  background: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#tabbrowser-tabs {
+  margin: 0 6px !important;
+}
+
+.tab-icon-image {
+  width: 16px;
+  height: 16px;
+}
+
+.tabbrowser-tab { /* Stop being able to drag around tab like browser, acts as part of titlebar */
+  pointer-events: none;
+}
+
+#titlebar, .tabbrowser-tab {
+  height: 20px;
+}
+
+.tab-content {
+  height: 42px;
+}
+
+html:not([tabsintitlebar="true"]) #titlebar,
+html:not([tabsintitlebar="true"]) .tabbrowser-tab,
+html:not([tabsintitlebar="true"]) .tab-background,
+html:not([tabsintitlebar="true"]) .tab-content,
+html:not([tabsintitlebar="true"]) #tabbrowser-tabs,
+html:not([tabsintitlebar="true"]) .tab-icon-image {
+  display: none !important;
+}
