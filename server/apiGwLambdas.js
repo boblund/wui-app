@@ -6,7 +6,7 @@ const jsYaml = require('js-yaml');
 const { schema } = require('yaml-cfn');
 const {readFileSync} = require('fs');
 const {join} = require('path');
-const ssm = new (require('aws-sdk')).SSM({region: 'us-east-1'});
+//const ssm = new (require('aws-sdk')).SSM({region: 'us-east-1'});
 
 async function apiGwLambdas({filesPath, templateName}) {
 	let apis = {};
